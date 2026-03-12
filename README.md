@@ -78,11 +78,11 @@ Models were evaluated using the following metrics:
 
 ### Results
 
-| Model | Accuracy | Churn F1 Score | Non-Churn F1 Score|
-|------|------||------|------|
-| Logistic Regression | 0.94 | 0.96 | 0.79|
-| Support Vector Machine | 0.97 | 0.98 | 0.88| 
-| Random Forest | **0.995** |**1.00**|**0.98**|
+| Model | Accuracy | Churn F1 Score | Non-Churn F1 Score |
+|------|------|------|------|
+| Logistic Regression | 0.94 | 0.96 | 0.79 |
+| Support Vector Machine | 0.97 | 0.98 | 0.88 |
+| Random Forest | **0.995** | **1.00** | **0.98** |
 
 The **Random Forest classifier** achieved the best performance, indicating that ensemble tree-based models are highly effective for this dataset.
 
