@@ -74,8 +74,6 @@ An ensemble learning method that combines multiple decision trees to capture com
 Models were evaluated using the following metrics:
 
 - Accuracy
-- Precision
-- Recall
 - F1-score
 
 ### Results
