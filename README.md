@@ -11,7 +11,7 @@ The project compares multiple classification models to determine which approach 
 - Feature engineering (one-hot encoding)
 - Feature scaling
 - Model training and comparison
-- Evaluation using accuracy, precision, recall, and F1-score
+- Evaluation using accuracy and F1-score
 - Feature importance analysis
 
 ---
