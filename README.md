@@ -5,7 +5,16 @@ This project uses machine learning to predict whether a customer will churn base
 The project compares multiple classification models to determine which approach performs best for predicting churn.
 
 ---
+## Skills Demonstrated
 
+- Data preprocessing
+- Feature engineering (one-hot encoding)
+- Feature scaling
+- Model training and comparison
+- Evaluation using accuracy, precision, recall, and F1-score
+- Feature importance analysis
+
+---
 ## Dataset
 
 The dataset contains **1000 customer records** with information about:
@@ -123,14 +132,4 @@ Potential improvements for this project include:
 - ROC curve and AUC comparison between models
 - Model deployment as a simple prediction API
 
----
 
-## Author
-
-This project was created as part of a machine learning portfolio demonstrating skills in:
-
-- data preprocessing
-- feature engineering
-- model development
-- model evaluation
-- feature importance interpretation
