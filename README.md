@@ -23,7 +23,6 @@ Telecommunication companies lose revenue when customers discontinue their servic
 ## Dataset
 
 **Source:** IBM Telco Customer Churn Dataset (Kaggle)
-https://www.kaggle.com/datasets/blastchar/telco-customer-churn
 
 The dataset contains information on **7,043 customers**, including:
 
