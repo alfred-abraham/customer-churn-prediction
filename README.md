@@ -178,3 +178,8 @@ This project demonstrates an end-to-end machine learning workflow, from data pre
 - Evaluate Precision-Recall AUC for the imbalanced classification problem.
 - Deploy the LightGBM model as an interactive Streamlit application.
 - Investigate SHAP values for more detailed model interpretability.
+
+---
+## How to Run
+- Clone repository
+- Install dependencies
