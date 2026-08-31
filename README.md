@@ -1,5 +1,52 @@
 # Customer Churn Prediction using Machine Learning
 
+## Live Application
+
+This repository includes a Streamlit app powered by the preferred LightGBM
+model from the project analysis. Enter a customer's account, billing, phone,
+and internet-service details to receive a churn classification and estimated
+probability.
+
+### Run locally
+
+Install [Python](https://www.python.org/downloads/) and
+[Git](https://git-scm.com/downloads), then clone the repository:
+
+```bash
+git clone https://github.com/alfred-abraham/customer-churn-prediction.git
+cd customer-churn-prediction
+```
+
+On Windows PowerShell:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+python -m streamlit run app.py
+```
+
+On macOS or Linux:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+python -m streamlit run app.py
+```
+
+The app opens at [http://localhost:8501](http://localhost:8501). The first
+prediction trains the model once on the repository dataset and caches it for
+the app process. Training and inference use the same preprocessing pipeline.
+
+### Deploy with Streamlit Community Cloud
+
+1. Push this repository to GitHub.
+2. Create an app in Streamlit Community Cloud and select this repository.
+3. Set the entry-point file to `app.py`, then deploy.
+
+No secrets or external services are required.
+
 ## Project Overview
 
 Customer retention is often more cost-effective than acquiring new customers. This project uses machine learning to predict customer churn for a telecommunications company using the Telco Customer Churn dataset.
