@@ -24,15 +24,17 @@ st.caption("A LightGBM classifier trained on the IBM Telco Customer Churn datase
 
 with st.sidebar:
     st.header("Model details")
-    from pathlib import Path
-    import pandas as pd
-    metrics = pd.read_csv(Path(__file__).parent / 'results' / 'metrics.csv')
-    row = metrics.set_index('model').loc['LightGBM']
-    st.write('Preferred model: LightGBM')
-    st.metric('Holdout ROC-AUC', f"{row.roc_auc:.3f}")
-    st.metric('Holdout churn recall', f"{row.recall:.1%}")
-    st.metric('Holdout average precision', f"{row.average_precision:.3f}")
-    st.caption('Selected using training cross-validation. Probabilities are uncalibrated model scores.')
+    st.markdown(
+        """
+        **Preferred model:** LightGBM  
+        **Notebook ROC-AUC:** 0.853  
+        **Notebook churn recall:** 75%  
+        **Notebook F1 score:** 0.63
+
+        LightGBM was selected because it produced the strongest ROC-AUC and
+        identified substantially more churners than the other evaluated models.
+        """
+    )
     st.info(
         "This portfolio application supports retention planning. Its prediction "
         "should be combined with business context before contacting a customer."
@@ -135,11 +137,11 @@ if submitted:
             st.success("✅ Lower churn risk")
             st.write("The model does not currently flag this customer as likely to churn.")
 
-        st.metric("Churn model score", f"{result.churn_probability:.1%}")
+        st.metric("Estimated churn probability", f"{result.churn_probability:.1%}")
         st.progress(result.churn_probability)
         st.caption(
             f"Model trained on {model_bundle.training_rows:,} labeled customers in this "
-            "repository. This score is uncalibrated and is not a guaranteed churn probability."
+            "repository. Probabilities are estimates, not guarantees."
         )
     except Exception:
         st.error("The model could not complete the prediction. Please review the inputs and try again.")
