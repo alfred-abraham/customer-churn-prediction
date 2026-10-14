@@ -1,230 +1,32 @@
-# Customer Churn Prediction using Machine Learning
+# Customer churn prediction
 
-## Live Application
+Compare Decision Tree, Random Forest and LightGBM classifiers on the 7,043-row [IBM Telco churn dataset](https://www.kaggle.com/datasets/blastchar/telco-customer-churn). The Streamlit app uses the same preprocessing and LightGBM configuration as the evaluation.
 
-This repository includes a Streamlit app powered by the preferred LightGBM
-model from the project analysis. Enter a customer's account, billing, phone,
-and internet-service details to receive a churn classification and estimated
-probability.
-
-### Run locally
-
-Install [Python](https://www.python.org/downloads/) and
-[Git](https://git-scm.com/downloads), then clone the repository:
-
+## Run
+Python 3.12:
 ```bash
-git clone https://github.com/alfred-abraham/customer-churn-prediction.git
-cd customer-churn-prediction
-```
-
-On Windows PowerShell:
-
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install -r requirements.txt
+python -m pip install -r requirements-dev.txt
+python evaluate_models.py
+python -m pytest tests
 python -m streamlit run app.py
 ```
+Open `Customer_Churn.ipynb` to inspect the saved evaluation; set RECOMPUTE=True to rerun. On Windows, create and activate a virtual environment with `python -m venv .venv` and `.\.venv\Scripts\Activate.ps1`.
 
-On macOS or Linux:
+## Method
+Drop customerID, map the churn target to 0/1, convert TotalCharges to numeric, and median-impute numerical features inside a pipeline. Categorical features are imputed and one-hot encoded. Fit transformations independently within each of five stratified CV training folds. The stratified 80/20 holdout is separate from training CV.
+Class weights emphasize churn recall. LightGBM remains the preferred app model based on training CV recall and average precision; holdout metrics are reported separately.
 
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install -r requirements.txt
-python -m streamlit run app.py
-```
+| model | accuracy | precision | recall | f1 | roc_auc | average_precision | cv_ap | cv_recall |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Decision Tree | 0.7296 | 0.4907 | 0.4920 | 0.4913 | 0.6542 | 0.3775 | 0.3826 | 0.4903 |
+| Random Forest | 0.7736 | 0.5653 | 0.6364 | 0.5987 | 0.8255 | 0.6109 | 0.6171 | 0.6475 |
+| LightGBM | 0.7573 | 0.5301 | 0.7540 | 0.6225 | 0.8324 | 0.6413 | 0.6502 | 0.7338 |
 
-The app opens at [http://localhost:8501](http://localhost:8501). The first
-prediction trains the model once on the repository dataset and caches it for
-the app process. Training and inference use the same preprocessing pipeline.
+The `cv_ap` and `cv_recall` columns are mean training-CV validation scores; the other columns describe the final holdout. Complete metrics and protocol metadata are in [results](results/).
+ROC and precision–recall curves are included in the notebook. The old metrics and preprocessing mismatch are superseded.
 
-### Deploy with Streamlit Community Cloud
+## Application behavior
+The first prediction trains on all labeled repository rows and caches the pipeline. Evaluation uses a separate training partition; fitting the final demonstration model on all rows is not itself an evaluation. No secrets are needed. For Streamlit Community Cloud, use `app.py` as the entry point.
 
-1. Push this repository to GitHub.
-2. Create an app in Streamlit Community Cloud and select this repository.
-3. Set the entry-point file to `app.py`, then deploy.
-
-No secrets or external services are required.
-
-## Project Overview
-
-Customer retention is often more cost-effective than acquiring new customers. This project uses machine learning to predict customer churn for a telecommunications company using the Telco Customer Churn dataset.
-
-Three classification models were developed and compared:
-
-- Decision Tree
-- Random Forest
-- LightGBM
-
-The models were evaluated using multiple classification metrics to determine which model best identifies customers likely to churn. Feature importance analysis was also performed to identify the business factors that contribute most to customer attrition.
-
----
-
-## Business Problem
-
-Telecommunication companies lose revenue when customers discontinue their services. The goal of this project is to develop a predictive model capable of identifying customers at high risk of churn so retention strategies can be implemented before customers leave.
-
----
-
-## Dataset
-
-**Source:** IBM Telco Customer Churn Dataset (Kaggle)
-
-The dataset contains information on **7,043 customers**, including:
-
-- Customer demographics
-- Account information
-- Services subscribed
-- Billing information
-- Churn status
-
-Target variable:
-
-- **Churn**
-    - Yes
-    - No
-
----
-
-## Project Workflow
-
-### 1. Data Exploration
-
-- Inspected dataset structure and data types
-- Checked for missing values
-- Checked for duplicate records
-- Examined class imbalance
-- Identified categorical and numerical variables
-
----
-
-### 2. Data Preprocessing
-
-Performed the following preprocessing steps:
-
-- Removed the customer ID column
-- Converted `TotalCharges` to numeric
-- Filled missing values using the median
-- Converted the target variable into binary values
-- Applied One-Hot Encoding to categorical variables
-- Split the data into training and testing sets
-
----
-
-### 3. Machine Learning Models
-
-Three supervised learning models were trained and evaluated:
-
-- Decision Tree
-- Random Forest
-- LightGBM
-
----
-
-### 4. Evaluation Metrics
-
-Models were compared using:
-
-- Accuracy
-- Precision
-- Recall
-- F1-score
-- ROC-AUC
-- Confusion Matrix
-
----
-
-## Model Performance
-
-| Model | Accuracy | Precision | Recall | F1 Score | ROC-AUC |
-|--------|---------:|----------:|--------:|---------:|---------:|
-| Decision Tree | 74.1% | 0.51 | 0.49 | 0.50 | 0.662 |
-| Random Forest | **79.9%** | **0.67** | 0.47 | 0.55 | 0.840 |
-| LightGBM | 77.0% | 0.54 | **0.75** | **0.63** | **0.853** |
-
-### Best Model
-
-Although Random Forest achieved the highest overall accuracy, LightGBM produced substantially higher recall and the strongest ROC-AUC.
-
-Because customer churn prediction prioritizes identifying customers likely to leave, **LightGBM was selected as the preferred model**.
-
----
-
-## Feature Importance
-
-Feature importance analysis identified the following variables as the strongest predictors of churn:
-
-- Monthly Charges
-- Total Charges
-- Customer Tenure
-
-Because categorical variables were one-hot encoded during preprocessing, feature importances for related dummy variables were aggregated to better represent the contribution of the original business variables.
-
----
-
-## Business Insights
-
-The analysis suggests that customer churn is primarily influenced by:
-
-- Higher monthly charges
-- Lower customer tenure
-- Overall customer spending
-
-These findings indicate that newer customers and customers with relatively high monthly charges may benefit from proactive retention strategies.
-
-Potential business actions include:
-
-- Offering incentives to newer customers
-- Monitoring customers with high monthly charges
-- Using the model to identify high-risk customers for targeted retention campaigns
-
----
-
-## Technologies Used
-
-- Python
-- pandas
-- NumPy
-- scikit-learn
-- LightGBM
-- Matplotlib
-- Jupyter Notebook
-
----
-
-## Key Skills Demonstrated
-
-- Data Cleaning
-- Exploratory Data Analysis
-- Feature Engineering
-- One-Hot Encoding
-- Supervised Machine Learning
-- Model Evaluation
-- ROC-AUC Analysis
-- Feature Importance Analysis
-- Business Insight Generation
-
----
-
-## Conclusion
-
-Three machine learning models were developed to predict customer churn.
-
-Random Forest achieved the highest accuracy, while LightGBM demonstrated superior recall and ROC-AUC, making it the most suitable model for customer retention applications.
-
-The project also identified monthly charges, total charges, and customer tenure as the strongest predictors of churn, providing actionable business insights that could help reduce customer attrition.
-
-This project demonstrates an end-to-end machine learning workflow, from data preprocessing through model evaluation and interpretation, while translating technical findings into business recommendations.
-
----
-## Future Improvements
-
-- Perform hyperparameter tuning using GridSearchCV or Optuna.
-- Evaluate Precision-Recall AUC for the imbalanced classification problem.
-- Investigate SHAP values for more detailed model interpretability.
-
----
-## How to Run
-- Clone repository
-- Install dependencies
+## Interpretation
+High-risk customers can be candidates for a retention review, but associations do not establish that changing charges or contract terms causes retention. The class-weighted probability output is uncalibrated; treat it as a model score. Select an operational threshold with validation data and campaign costs, then evaluate it once on independent data. The dataset is a single historical snapshot, and no time-based or external validation is claimed.
